@@ -1,7 +1,4 @@
-def print_hi(name):
-    print(f'Hi, {name}')
+from fastapi import FastAPI
 
-
-if __name__ == '__main__':
-    print_hi('PyCharm')
+app = FastAPI()
 
