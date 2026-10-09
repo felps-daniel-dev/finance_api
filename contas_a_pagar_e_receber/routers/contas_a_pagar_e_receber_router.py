@@ -22,7 +22,7 @@ class ContaPagarReceberRequest(BaseModel):
     tipo: str  # PAGAR, RECEBER
 
 
-@router.get("/contas", response_model=List[ContaPagarReceberResponse])
+@router.get("/", response_model=List[ContaPagarReceberResponse])
 def listarContas():
     return [
         ContaPagarReceberResponse(
@@ -44,7 +44,7 @@ def listarContas():
 def noca_conta(conta: ContaPagarReceberRequest):
     return ContaPagarReceberResponse(
         id=3,
-        description="busao",
-        valor=250,
+        description="Mercado",
+        valor=1000.00,
         tipo="PAGAR"
     )
