@@ -1,16 +1,31 @@
+import os
+
 from sqlmodel import SQLModel, Session, create_engine
 
-DATABASE_URL = "postgres:///postgres@localhost"
+from sqlalchemy.engine import URL
+
+DATABASE_URL = URL.create(
+    "postgresql+psycopg2",
+    username="postgres",
+    password="123456",
+    host="localhost",
+    port=5432,
+    database="precificacao",
+)
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+psycopg2://postgres:123456@localhost:5432/precificacao",
+)
 
 # O engine é a "ponte" com o banco, criado uma vez só.
-# check_same_thread=False é necessário no SQLite com FastAPI, porque
-# o FastAPI pode usar threads diferentes na mesma requisição.
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# pool_pre_ping=True testa a conexão antes de usá-la, evitando erro
+# se o Postgres tiver fechado conexões antigas.
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
 
 # Cria no banco todas as tabelas dos modelos com table=True.
-# Os modelos precisam ter sido importados antes
-# senão o SQLModel não sabe que eles existem.
+# Os modelos precisam ter sido importados antes, senão o SQLModel
+# não sabe que eles existem.
 def criar_tabelas() -> None:
     SQLModel.metadata.create_all(engine)
 
